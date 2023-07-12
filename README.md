@@ -69,78 +69,16 @@ MySQL mysqlclient
 ### 图数据库编辑
 
 - 查
-    
-    ```Python
-    def get_disease(self, disease_name):
-        """
-        获取疾病节点
-        :param disease_name: str, 疾病名称
-        :return: Node, 疾病节点
-        """
-        query = f"MATCH (d:Disease) WHERE d.name = '{disease_name}' RETURN d"
-        result = self.graph.run(query).data()
-        if result:
-            return result[0]['d']
-        return None
-            
-    def disease_drugs_symptoms(self, disease_name):
-       """
-       查询与给定疾病相关的所有药品和症状
-       :param disease_name: str, 疾病名称
-       :return: 查询结果
-       """
-       query = f"MATCH (d:Disease)-[:HAS_DRUG]->(dr:Drug), (d:Disease)-[:HAS_SYMPTOM]->(s:Symptom) WHERE d.name = '{disease_name}' RETURN dr, s"
-       return self.graph.run(query).data()
-    ```
-    
+  - 获取疾病节点
+  - 查询与给定疾病相关的所有药品和症状
+  
 - 增
-    
-    ```Python
-    def update_disease(self, disease_name, new_info):
-            """
-            更新疾病节点属性
-            :param disease_name: str, 疾病名称
-            :param new_info: Dict, 新的疾病属性
-            :return: Node, 更新后的疾病节点
-            """
-            node = self.get_disease(disease_name)
-            if node:
-                for key, value in new_info.items():
-                    if value.strip():
-                        node[key] = value
-                self.graph.push(node)
-                return node
-            return None
-    ```
+  - 更新疾病节点属性
     
 - 删
-    
-    ```Python
-      def delete_disease(self, disease_name):
-            """
-            删除疾病节点
-            :param disease_name: str, 疾病名称
-            :return: bool, 表示是否成功删除节点
-            """
-            node = self.get_disease(disease_name)
-            if node:
-                self.graph.delete(node)
-                return True
-            return False
-    ```
-    
+  - 删除疾病 
 - 改
-    
-    ```Python
-    updated_node = handler.update_disease(name, updated_info)
-    if updated_node:
-        print("Disease updated:")
-        encoded_updated_node = {k: v.encode('utf-8').decode('utf-8') if isinstance(v, str) else v for k, v in
-                                updated_node.items()}
-        print(encoded_updated_node)
-    else:
-        print("Disease not found.")
-    ```
+  - 更新疾病
     
 
 ## 关系型数据库
@@ -150,28 +88,65 @@ MySQL mysqlclient
 关系型数据库是一种以关系模型为基础的数据库系统。它使用表格（关系）来组织和表示数据，并使用结构化查询语言（SQL）进行数据管理和查询。关系型数据库的核心思想是将数据分解为多个表格，每个表格包含行和列，其中行表示记录，列表示属性。关系型数据库通过定义表之间的关系（主键、外键等）来建立数据之间的联系。它具有事务处理能力和数据一致性保证，适用于大规模数据存储和复杂的数据操作需求。
 
   
+- `疾病（Disease）`
+    - `名称（name）`：字符字段，最大长度为255
+    - `别名（altername）`：字符字段，最大长度为255（可选）
+    - `受影响人群（people）`：字符字段，最大长度为255（可选）
+    - `传染性（infectivity）`：整数字段
+    - `保险覆盖人数（under_insurance）`：整数字段
 
-MySQL设计
+- `科室（Department）`
+    - `科室名称（department）`：字符字段，最大长度为255
 
-- 疾病表：id、疾病名、又名、患病人群、传染性、是否在医保范围
-    
-- 症状表：id、部位、症状
-    
-- 药物表：id、药物名、副作用、服用指导、费用
-    
-- 治疗表：id、名字（手术、心理、饮食、物理……）
-    
-- 科室表：id、科室名
-    
-- 疾病和症状（多对多）
-    
-- 疾病和药物（多对多）
-    
-- 疾病和治疗（多对多）
-    
-- 疾病和科室（多对多）
-    
+- `疾病科室（DiseaseDepartment）`
+    - `疾病ID（disease）`：与`疾病（Disease）`表相关的外键
+    - `科室ID（department）`：与`科室（Department）`表相关的外键
 
-  
+- `药物（Medicine）`
+    - `名称（name）`：字符字段，最大长度为255
+    - `不良反应（adverse_reaction）`：字符字段，最大长度为255（可选）
+    - `用法指导（instruction）`：字符字段，最大长度为255（可选）
+
+- `疾病药物（DiseaseMedicine）`
+    - `疾病ID（disease）`：与`疾病（Disease）`表相关的外键
+    - `药物ID（medicine）`：与`药物（Medicine）`表相关的外键
+
+- `症状（Symptoms）`
+    - `症状（symptom）`：字符字段，最大长度为255
+    - `部位（part）`：字符字段，最大长度为255
+
+- `疾病症状（DiseaseSymptom）`
+    - `疾病ID（disease）`：与`疾病（Disease）`表相关的外键
+    - `症状ID（symptom）`：与`症状（Symptoms）`表相关的外键
+
+- `治疗方法（Treatments）`
+    - `治疗方法（treatment）`：字符字段，最大长度为255
+
+- `疾病治疗（DiseaseTreatment）`
+    - `疾病ID（disease）`：与`疾病（Disease）`表相关的外键
+    - `治疗方法ID（treatment）`：与`治疗方法（Treatments）`表相关的外键
+
+其中每个表都有自增id为主键  
 
 ### 关系型数据库编辑
+`/data `路径存储需要读入的csv文件
+
+`insert_data.py`文件插入数据
+
+`/index` 页面显示主要功能
+
+- 增
+  - 增加新的疾病及其属性
+
+- 删
+  - 删除整个疾病，删除特定属性
+
+- 改
+  - 修改疾病名称及其属性
+
+- 查
+  - 查找疾病
+
+属性为：疾病名，又名，患病人群，有无传染性，是否在医保范围
+
+可修改的属性不涉及相关操作
