@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>增加疾病信息</title>
+</head>
+<body>
+<form action="/mymedicine/diseaseadd" method="POST">
+    {% csrf_token %}
+   <p>疾病名：<input type="text" name="name" required="required"/></p>
+  <p>又名：<input type="text" name="altername" /></p>
+  <p>患病人群:<input type="text" name="people" /></p>
+  <p>有无传染性：
+      <label for="i1">有</label><input id="i1" value="1" type="radio" name="infectivity" checked="checked">
+  <label for="i2">无</label><input id="i2" value="0" type="radio" name="infectivity"></p>
+  <p>是否在医保范围：
+       <label for="u1">是</label><input type="radio" id="u1" value="1" name="under_insurance" checked="checked">
+        <label for="u2">否</label><input type="radio" id="u2" value="0" name="under_insurance"></p>
+  <p><input type="submit" value="提交" /></p>
+</form>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>全部疾病</title>
+    </head>
+
+    <body>
+    <form action="/mymedicine/disease" method="POST">
+        {% csrf_token %}
+         <p>疾病名
+        <select name="name">
+            <option value=''>所有</option>>
+            {% for disease in diseases %}
+            <option value={{disease.name}}>{{disease.name}}</option>
+             {% endfor %}
+        </select>
+       又名：
+        <select name="altername">
+            <option value=''>所有</option>>
+            {% for disease in diseases %}
+            <option value={{disease.altername}}>{{disease.altername}}</option>
+             {% endfor %}
+        </select>
+        </p>
+       <p> 患病人群：
+        <select name="people">
+            <option value=''>所有</option>>
+            {% for disease in diseases %}
+            <option value={{disease.people}}>{{disease.people}}</option>
+             {% endfor %}
+        </select>
+       </p>
+        <p>有无传染性：
+            <label for="i3">所有</label><input id="i3" value='' type="radio" name="infectivity" checked="checked">
+      <label for="i1">有</label><input id="i1" value="1" type="radio" name="infectivity" >
+  <label for="i2">无</label><input id="i2" value="0" type="radio" name="infectivity"></p>
+  <p>是否在医保范围：
+      <label for="u3">所有</label><input id="u3" value='' type="radio" name="under_insurance" checked="checked">
+       <label for="u1">是</label><input type="radio" id="u1" value="1" name="under_insurance" >
+        <label for="u2">否</label><input type="radio" id="u2" value="0" name="under_insurance"></p>
+        <p><input type="submit" value="查询" /></p>
+    </form>
+        <h1>疾病列表</h1>
+    <form action="/mymedicine/disease" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>删除</td>
+                <td>疾病名</td>
+                <td>又名</td>
+                <td>患病人群</td>
+                <td>传染性</td>
+                <td>是否在医保范围</td>
+            </tr>
+            {% for disease in diseases %}
+            <tr>
+                <td><button type="submit"  name="delbtn" value={{disease.id}}>删除</button></td>
+                <td>{{disease.name}}</td>
+                <td>{{disease.altername}}</td>
+                <td>{{disease.people}}</td>
+                {% if disease.infectivity %}
+                <td>有</td>
+                {% endif %}
+                {% if not disease.infectivity %}
+                <td>无</td>
+                {% endif %}
+                {% if disease.under_insurance %}
+                <td>是</td>
+                {% endif %}
+                {% if not disease.under_insurance %}
+                <td>否</td>
+
+                {% endif %}
+                <td><button type="submit"  name="detailbtn" value={{disease.id}}>详情</button></td>
+
+            </tr>
+            {% endfor %}
+        </table>
+        </form>
+    </body>
+
+</html>

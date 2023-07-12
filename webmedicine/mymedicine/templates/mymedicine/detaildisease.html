@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>疾病详情页</title>
+</head>
+<body>
+<h1>疾病信息</h1>
+        <p>疾病名：{{disease.name}}</p>
+        <p>又名：{{disease.altername}}</p>
+        <p>患病人群：{{disease.people}}</p>
+        {% if disease.infectivity %}
+        <p>传染性：有</p>
+        {% endif %}
+        {% if not disease.infectivity %}
+        <p>传染性：无</p>
+        {% endif %}
+        {% if disease.under_insurance %}
+        <p>是否在医保范围：是</p>
+        {% endif %}
+        {% if not disease.under_insurance %}
+        <p>是否在医保范围：否</p>
+        {% endif %}
+        {% if dept%}
+        <p>所属科室：{% for p in dept %}{{p}}  {% endfor %}</p>
+        {% endif %}
+        {% if symptom %}
+        <p>症状：{% for s in symptom %}{{s}}  {% endfor %}</p>
+        {% endif %}
+        {% if treat %}
+        <p>治疗方式：{% for t in treat %}{{t}}  {% endfor %}</p>
+        {% endif %}
+        {% if drug %}
+        <p>药物：{% for u in drug %}{{u}}  {% endfor %}</p>
+        {% endif %}
+<form action="/mymedicine/detaildisease" method="POST">
+        {% csrf_token %}
+        <button type="submit"  name="editbtn" value={{disease.id}}>修改</button></form>
+</body>
+</html>

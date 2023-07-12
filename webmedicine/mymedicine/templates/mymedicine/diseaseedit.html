@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑疾病</title>
+</head>
+<body>
+<form action="/mymedicine/diseaseedit" method="POST">
+    {% csrf_token %}
+    <p>疾病ID：<input type="number" name="id" value={{disease.id}} readonly /></p>
+   <p>疾病名：<input type="text" name="name" value={{disease.name}} /></p>
+  <p>又名：<input type="text" name="altername" value={{disease.altername}} /></p>
+  <p>患病人群:<input type="text" name="people" value={{disease.people}}   /></p>
+
+  <p><input type="submit" value="提交" /></p>
+</form>
+</body>
+</html>
