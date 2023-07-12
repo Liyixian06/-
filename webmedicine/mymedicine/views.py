@@ -37,7 +37,6 @@ def disease(request):
         if detailbtn !='':
             detaildisease = Disease.objects.get(Q(id=int(detailbtn)))
             disease_departments = DiseaseDepartment.objects.filter(Q(disease_id=int(detailbtn)))
-
             disease_symptons = DiseaseSymptom.objects.filter(Q(disease_id=int(detailbtn)))
             disease_medicines = DiseaseMedicine.objects.filter(Q(disease_id=int(detailbtn)))
             disease_treaments = DiseaseTreatment.objects.filter(Q(disease_id=int(detailbtn)))
@@ -56,11 +55,10 @@ def disease(request):
 
             context = {'disease': detaildisease, 'symptom': symptom_list, 'drug': drug_list, 'dept': dept_list,'treat': treat_list}
             return render(request,'mymedicine/detaildisease.html',context)
-
-
     else :
         diseases = Disease.objects.all()
     return render(request, 'mymedicine/disease.html', {'diseases': diseases,'alldiseases':alldiseases})
+
 def disease_add(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -72,15 +70,35 @@ def disease_add(request):
         new_disease.save()
         diseases = Disease.objects.all()
         return render(request, 'mymedicine/disease.html', {'diseases': diseases})
-
     else :
         return render(request,'mymedicine/diseaseadd.html')
+    
 def disease_detail(request):
     if request.method == "POST":
         editbtn = request.POST.get('editbtn')
         if editbtn !='':
-            disease = Disease.objects.get(id=int(editbtn))
-            return render(request,'mymedicine/diseaseedit.html',{'disease':disease})
+            id = int(editbtn)
+            disease = Disease.objects.get(id=id)
+            disease_departments = DiseaseDepartment.objects.filter(Q(disease_id=id))
+            disease_symptons = DiseaseSymptom.objects.filter(Q(disease_id=id))
+            disease_medicines = DiseaseMedicine.objects.filter(Q(disease_id=id))
+            disease_treaments = DiseaseTreatment.objects.filter(Q(disease_id=id))
+            drug_list = []
+            symptom_list = []
+            dept_list = []
+            treat_list = []
+            for dept in disease_departments:
+                dept_list.append(dept.department.department)
+            for medicine in disease_medicines:
+                drug_list.append(medicine.medicine.name)
+            for sympoton in disease_symptons:
+                symptom_list.append(sympoton.symptom.symptom)
+            for treatment in disease_treaments:
+                treat_list.append(treatment.treament.treatment)
+            context = {'disease': disease, 'symptom': symptom_list, 'drug': drug_list, 'dept': dept_list,
+                   'treat': treat_list}
+            return render(request,'mymedicine/diseaseedit.html', context)
+        
 def disease_edit(request):
     if request.method == "POST":
         id = int(request.POST.get('id'))
@@ -95,7 +113,6 @@ def disease_edit(request):
             Disease.objects.filter(id = id).update(people=people)
         detaildisease = Disease.objects.get(Q(id=id))
         disease_departments = DiseaseDepartment.objects.filter(Q(disease_id=id))
-
         disease_symptons = DiseaseSymptom.objects.filter(Q(disease_id=id))
         disease_medicines = DiseaseMedicine.objects.filter(Q(disease_id=id))
         disease_treaments = DiseaseTreatment.objects.filter(Q(disease_id=id))

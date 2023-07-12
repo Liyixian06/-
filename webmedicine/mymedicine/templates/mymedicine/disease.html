@@ -33,12 +33,14 @@
        </p>
         <p>有无传染性：
             <label for="i3">所有</label><input id="i3" value='' type="radio" name="infectivity" checked="checked">
-      <label for="i1">有</label><input id="i1" value="1" type="radio" name="infectivity" >
-  <label for="i2">无</label><input id="i2" value="0" type="radio" name="infectivity"></p>
-  <p>是否在医保范围：
-      <label for="u3">所有</label><input id="u3" value='' type="radio" name="under_insurance" checked="checked">
-       <label for="u1">是</label><input type="radio" id="u1" value="1" name="under_insurance" >
-        <label for="u2">否</label><input type="radio" id="u2" value="0" name="under_insurance"></p>
+            <label for="i1">有</label><input id="i1" value="1" type="radio" name="infectivity" >
+            <label for="i2">无</label><input id="i2" value="0" type="radio" name="infectivity">
+        </p>
+        <p>是否在医保范围：
+            <label for="u3">所有</label><input id="u3" value='' type="radio" name="under_insurance" checked="checked">
+            <label for="u1">是</label><input type="radio" id="u1" value="1" name="under_insurance" >
+            <label for="u2">否</label><input type="radio" id="u2" value="0" name="under_insurance">
+        </p>
         <p><input type="submit" value="查询" /></p>
     </form>
         <h1>疾病列表</h1>
@@ -70,10 +72,8 @@
                 {% endif %}
                 {% if not disease.under_insurance %}
                 <td>否</td>
-
                 {% endif %}
                 <td><button type="submit"  name="detailbtn" value={{disease.id}}>详情</button></td>
-
             </tr>
             {% endfor %}
         </table>

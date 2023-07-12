@@ -1,17 +1,4 @@
-
-
-
 from django.db import models
-
-
-class Department(models.Model):
-    id = models.IntegerField(primary_key=True)
-    department = models.CharField(max_length=255)
-
-    class Meta:
-        managed = True
-        db_table = 'department'
-
 
 class Disease(models.Model):
     name = models.CharField(max_length=255)
@@ -24,44 +11,22 @@ class Disease(models.Model):
         managed = True
         db_table = 'disease'
 
+class Department(models.Model):
+    #id = models.IntegerField(primary_key=True)
+    department = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'department'
 
 class DiseaseDepartment(models.Model):
-    id = models.IntegerField(primary_key=True)
-    disease = models.ForeignKey(Disease, models.DO_NOTHING)
-    department = models.ForeignKey(Department, models.DO_NOTHING)
+    #id = models.IntegerField(primary_key=True)
+    disease = models.ForeignKey('Disease', on_delete=models.CASCADE, )
+    department = models.ForeignKey('Department', on_delete=models.CASCADE,)
 
     class Meta:
         managed = True
         db_table = 'disease_department'
-
-
-class DiseaseMedicine(models.Model):
-    disease = models.ForeignKey(Disease, models.DO_NOTHING)
-    medicine = models.ForeignKey('Medicine', models.DO_NOTHING)
-
-    class Meta:
-        managed = True
-        db_table = 'disease_medicine'
-
-
-class DiseaseSymptom(models.Model):
-    id = models.IntegerField(primary_key=True)
-    disease = models.ForeignKey(Disease, models.DO_NOTHING)
-    symptom = models.ForeignKey('Symptoms', models.DO_NOTHING)
-
-    class Meta:
-        managed = True
-        db_table = 'disease_symptom'
-
-
-class DiseaseTreatment(models.Model):
-    disease = models.ForeignKey(Disease, models.DO_NOTHING)
-    treament = models.ForeignKey('Treatments', models.DO_NOTHING)
-
-    class Meta:
-        managed = True
-        db_table = 'disease_treatment'
-
 
 class Medicine(models.Model):
     name = models.CharField(max_length=255)
@@ -72,9 +37,16 @@ class Medicine(models.Model):
         managed = True
         db_table = 'medicine'
 
+class DiseaseMedicine(models.Model):
+    disease = models.ForeignKey('Disease', on_delete=models.CASCADE,)
+    medicine = models.ForeignKey('Medicine', on_delete=models.CASCADE,)
+
+    class Meta:
+        managed = True
+        db_table = 'disease_medicine'
 
 class Symptoms(models.Model):
-    id = models.IntegerField(primary_key=True)
+    #id = models.IntegerField(primary_key=True)
     symptom = models.CharField(max_length=255)
     part = models.CharField(max_length=255)
 
@@ -82,6 +54,14 @@ class Symptoms(models.Model):
         managed = True
         db_table = 'symptoms'
 
+class DiseaseSymptom(models.Model):
+    #id = models.IntegerField(primary_key=True)
+    disease = models.ForeignKey('Disease', on_delete=models.CASCADE,)
+    symptom = models.ForeignKey('Symptoms', on_delete=models.CASCADE,)
+
+    class Meta:
+        managed = True
+        db_table = 'disease_symptom'
 
 class Treatments(models.Model):
     treatment = models.CharField(max_length=255)
@@ -89,3 +69,11 @@ class Treatments(models.Model):
     class Meta:
         managed = True
         db_table = 'treatments'
+
+class DiseaseTreatment(models.Model):
+    disease = models.ForeignKey('Disease', on_delete=models.CASCADE,)
+    treament = models.ForeignKey('Treatments', on_delete=models.CASCADE,)
+
+    class Meta:
+        managed = True
+        db_table = 'disease_treatment'

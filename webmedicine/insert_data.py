@@ -1,8 +1,8 @@
 import os
-os.environ['DJANGO_SETTINGS_MODULE']="medical.settings"
+os.environ['DJANGO_SETTINGS_MODULE']="webmedicine.settings"
 
 import django;django.setup()
-from disease.models import Disease, Symptom, Department, Treatment, Drug
+from mymedicine.models import Disease, Symptoms, Department, Treatments, Medicine, DiseaseSymptom, DiseaseDepartment, DiseaseTreatment, DiseaseMedicine
 import csv
 
 name_list = []
@@ -98,34 +98,36 @@ f.close()
 def create_diseases():
     for name, alias, patient, infection, insurance in zip(name_list, alias_list, patient_list, infection_list, insurance_list):
          print(name, alias, patient, infection, insurance)
-         disease = Disease(name=name, alias=alias, patient=patient, infection=infection, insurance=insurance)
+         disease = Disease(name=name, altername=alias, people=patient, infectivity=infection, under_insurance=insurance)
          disease.save()
 
 def create_symptoms():
     for symptom, part in zip(symptom_list, part_list):
         print(symptom, part)
-        symptoms = Symptom(symptom=symptom, part=part)
+        symptoms = Symptoms(symptom=symptom, part=part)
         symptoms.save()
 
 def create_disease_symptom():
     for disease_name, symptom_name in zip(disease_name_list, disease_symptom_list):
         print(disease_name, symptom_name)
         d = Disease.objects.get(name=disease_name)
-        s = Symptom.objects.get(symptom=symptom_name)
-        s.disease.add(d)
+        s = Symptoms.objects.get(symptom=symptom_name)
+        disease_symptom = DiseaseSymptom(disease=d, symptom=s)
+        disease_symptom.save()
 
 def create_drugs():
     for drug_name, reaction, usage in zip(drug_list, reaction_list, usage_list):
         print(drug_name, reaction, usage)
-        drug = Drug(drug=drug_name, adverse_reaction = reaction, usage = usage)
+        drug = Medicine(name=drug_name, adverse_reaction = reaction, instruction = usage)
         drug.save()
 
 def create_disease_drug():
     for disease_name, drug_name in zip(disease_name_list2, disease_drug_list):
         print(disease_name, drug_name)
         d = Disease.objects.get(name=disease_name)
-        u = Drug.objects.get(drug=drug_name)
-        u.disease.add(d)
+        u = Medicine.objects.get(name=drug_name)
+        disease_medicine = DiseaseMedicine(disease=d, medicine=u)
+        disease_medicine.save()
 
 def create_dept():
     for dept_name in dept_list:
@@ -138,20 +140,22 @@ def create_disease_dept():
         print(disease_name, dept_name)
         d = Disease.objects.get(name=disease_name)
         p = Department.objects.get(department=dept_name)
-        p.disease.add(d)
+        disease_dept = DiseaseDepartment(disease=d, department=p)
+        disease_dept.save()
 
 def create_treatment():
     for treat_name in treat_list:
         print(treat_name)
-        treat = Treatment(treatment=treat_name)
+        treat = Treatments(treatment=treat_name)
         treat.save()
 
 def create_disease_treatment():
     for disease_name, treat_name in zip(disease_name_list4, disease_treat_list):
         print(disease_name, treat_name)
         d = Disease.objects.get(name=disease_name)
-        t = Treatment.objects.get(treatment=treat_name)
-        t.disease.add(d)
+        t = Treatments.objects.get(treatment=treat_name)
+        disease_treat = DiseaseTreatment(disease=d, treament=t)
+        disease_treat.save()
 
 if __name__ == '__main__':
      #create_diseases()
