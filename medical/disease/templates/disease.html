@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>{{disease.name}}详情页</title>
+    </head>
+    <body>
+        <h1>疾病信息</h1>
+        <p>疾病 ID：{{disease.id | add:'-20'}}</p>
+        <p>疾病名：{{disease.name}}</p>
+        <p>又名：{{disease.alias}}</p>
+        <p>患病人群：{{disease.patient}}</p>
+        {% if disease.infection %}
+        <p>传染性：有</p>
+        {% endif %}
+        {% if not disease.infection %}
+        <p>传染性：无</p>
+        {% endif %}
+        {% if disease.insurance %}
+        <p>是否在医保范围：是</p>
+        {% endif %}
+        {% if not disease.insurance %}
+        <p>是否在医保范围：否</p>
+        {% endif %}
+        <p>所属科室：{% for p in dept %}{{p}}  {% endfor %}</p>
+        <p>症状：{% for s in symptom %}{{s}}  {% endfor %}</p>
+        <p>治疗方式：{% for t in treat %}{{t}}  {% endfor %}</p>
+        <p>药物：{% for u in drug %}{{u}}  {% endfor %}</p>
+    </body>
+</html>
