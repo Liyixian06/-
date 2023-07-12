@@ -50,23 +50,14 @@ MySQL mysqlclient
 
   
 
-函数create_diseases_nodes则专门用于创建疾病节点，并为每个节点设置属性。在函数中，使用Node对象创建具有相应属性的疾病节点，并通过调用graph.create将节点添加到图数据库中。
+函数`create_diseases_nodes`则专门用于创建疾病节点，并为每个节点设置属性。在函数中，使用`Node`对象创建具有相应属性的疾病节点，并通过调用`graph.create`将节点添加到图数据库中。
+函数`create_node`用于创建一个特定标签和节点名称的节点。它接收两个参数：`label`表示节点的标签，`nodes`是一个节点名称的列表。代码使用`for`循环遍历`nodes`列表，对于每个节点名称，创建一个具有指定标签和名称的节点，并通过`self.graph.create(node)`将节点添加到图数据库中。
+函数`create_diseases_nodes`用于创建疾病节点及其属性。它接收一个疾病信息的列表`disease_info`作为参数。代码使用`for`循环遍历`disease_info`列表中的每个疾病字典。对于每个疾病字典，根据字典中的键值对创建一个具有特定属性的疾病节点，并将节点添加到图数据库中。
+函数`create_graphNodes`是整个过程的入口函数。它调用`read_file`函数来读取相关文件并获取所需的数据。然后，它依次调用`create_diseases_nodes`和`create_node`函数来创建疾病、症状、别名、部位、科室、并发症和药物等节点，并将它们添加到图数据库中。
 
-age checklist infection insurance money name period rate treatment
-
-函数create_node用于创建一个特定标签和节点名称的节点。它接收两个参数：label表示节点的标签，nodes是一个节点名称的列表。代码使用for循环遍历nodes列表，对于每个节点名称，创建一个具有指定标签和名称的节点，并通过self.graph.create(node)将节点添加到图数据库中。
-
-函数create_diseases_nodes用于创建疾病节点及其属性。它接收一个疾病信息的列表disease_info作为参数。代码使用for循环遍历disease_info列表中的每个疾病字典。对于每个疾病字典，根据字典中的键值对创建一个具有特定属性的疾病节点，并将节点添加到图数据库中。
-
-函数create_graphNodes是整个过程的入口函数。它调用read_file函数来读取相关文件并获取所需的数据。然后，它依次调用create_diseases_nodes和create_node函数来创建疾病、症状、别名、部位、科室、并发症和药物等节点，并将它们添加到图数据库中。
-
-  
-
-函数create_relationship用于创建实体之间的关系边，首先通过将边的起始节点和结束节点连接为字符串，并将其添加到一个集合中来进行去重处理。然后，使用一个循环遍历集合中的每个边。对于每个边，它将其拆分为起始节点和结束节点，并构建一个Cypher查询语句。查询语句使用MATCH子句匹配起始节点和结束节点，然后使用CREATE子句创建起始节点与结束节点之间的关系，并指定关系类型和名称。最后，通过调用self.graph.run(query)来执行查询语句，将关系添加到图数据库中。
-
-函数create_relationship("Disease", "Alias", rel_alias, "ALIAS_IS", "别名") 表示创建疾病节点与别名节点之间的关系，关系类型为 "ALIAS_IS"，关系名称为 "别名"，症状、部位、科室、并发症和药物之间的关系仿照其实现。
-
-函数create_graphRels调用create_relationship函数来创建各种实体之间的关系，create_relationship函数传递以下参数：起始节点类型（start_node）、结束节点类型（end_node）、边的列表（edges）、关系类型（rel_type）和关系名称（rel_name）。
+函数`create_relationship`用于创建实体之间的关系边，首先通过将边的起始节点和结束节点连接为字符串，并将其添加到一个集合中来进行去重处理。然后，使用一个循环遍历集合中的每个边。对于每个边，它将其拆分为起始节点和结束节点，并构建一个Cypher查询语句。查询语句使用`MATCH`子句匹配起始节点和结束节点，然后使用`CREATE`子句创建起始节点与结束节点之间的关系，并指定关系类型和名称。最后，通过调用`self.graph.run(query)`来执行查询语句，将关系添加到图数据库中。
+函数`create_relationship("Disease", "Alias", rel_alias, "ALIAS_IS", "别名") `表示创建疾病节点与别名节点之间的关系，关系类型为 "ALIAS_IS"，关系名称为 "别名"，症状、部位、科室、并发症和药物之间的关系仿照其实现。
+函数`create_graphRels`调用`create_relationship`函数来创建各种实体之间的关系，`create_relationship`函数传递以下参数：起始节点类型（start_node）、结束节点类型（end_node）、边的列表（edges）、关系类型（rel_type）和关系名称（rel_name）。
 
   
 
