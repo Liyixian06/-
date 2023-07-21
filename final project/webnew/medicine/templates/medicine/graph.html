@@ -1,0 +1,221 @@
+<!doctype html>
+{% load static %}
+<html>
+<meta charset="UTF-8">
+
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+<head>
+    <title>Neovis.js Simple Example</title>
+    <style type="text/css">
+        html, body {
+            font: 16pt arial;
+        }
+
+        #viz {
+            width: 965px;
+            height: 500px;
+            border: 1px solid lightgray;
+            font: 22pt arial;
+        }
+ .search {
+  width: 30%;
+  position: relative;
+  display: flex;
+  clear:both;
+  bottom: 0px;
+  top:10px;
+  font: 10pt arial;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #00B4CC;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+    </style>
+
+
+    <!-- FIXME: load from dist -->
+<script type="text/javascript" src="{% static '/neovis.js' %}"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+   <script type="text/javascript">
+
+    var viz;
+
+ 		function draw() {
+			var config = {
+				containerId: "viz",
+				neo4j: {
+					serverUrl: "bolt://localhost:7687",
+					serverUser: "neo4j",
+					serverPassword: "12345678"
+				},
+				visConfig:{
+				nodes:{shape:'dot',
+				},
+				edges:{arrows:{
+				to:{enabled:true}
+				}},
+				},
+				labels: {
+
+				Disease:{
+				[NeoVis.NEOVIS_ADVANCED_CONFIG]:{
+				static:{color:'#C990C0'}
+				},
+				label:'name',
+
+                     defaultCaption: '<id>',
+                     caption: "{name}",
+				group:'Disease',
+
+				cpyher:{
+				value:"p=MATCH(n)-[*]->() WHERE id(n)= $id RETURN p"
+				},
+				function:{
+				title:(node)=>{
+				return viz.nodeToHtml(node,undefined);
+				},
+				},
+				},
+                Symptom:  {
+                [NeoVis.NEOVIS_ADVANCED_CONFIG]:{
+				static:{color:'#F79767'}
+				},
+                label:'name',
+                group:'Symptom',
+                },
+                Department:   {
+                [NeoVis.NEOVIS_ADVANCED_CONFIG]:{
+				static:{color:'#57C7E3'}
+				},
+                label:'name',
+                group:'Department',
+
+                },
+                Part:  {
+                [NeoVis.NEOVIS_ADVANCED_CONFIG]:{
+				static:{color:'#F16667'}
+				},
+                label:'name',
+                group:'Part',
+                },
+                Drug:{
+                [NeoVis.NEOVIS_ADVANCED_CONFIG]:{
+				static:{color:'#D9C8AE'}
+				},
+                label:'name',
+                group:'Drug',
+                }
+
+				},
+				relationships: {
+				HAS_SYMPTOM:{
+				thicknesss:'weight',
+				caption:true,
+                label:'name',
+
+				},
+				PART_IS:{
+				thicknesss:'weight',
+				caption:true,
+                label:'name',
+                },
+				DEPARTMENT_IS:{
+				thicknesss:'weight',
+				caption:true,
+                label:'name',},
+				HAS_COMPLICATION:{
+				thicknesss:'weight',
+				caption:true,
+                label:'name',},
+				HAS_DRUG:{
+				thicknesss:'weight',
+				caption:true,
+                label:'name',
+				},
+
+
+				},
+
+
+				hierarchical:true,
+				initialCypher: "match(n:Disease) return n limit 10",
+			},
+
+       viz = new NeoVis.default(config);
+       viz.render();
+            viz.registerOnEvent('clickNode' ,(e)=>{
+            viz["network"].on("click",(event)=>{
+            var nodeid = event.nodes[0];
+            if (nodeid){
+            var cypherQuery = "MATCH p=(node)-[*1]-() WHERE ID(node) = "+nodeid + " RETURN p limit 10";
+             viz.renderWithCypher(cypherQuery);
+}
+else {viz.reload();}
+            });
+            });
+$("#reload").click(function () {
+
+		var describe = $("#cypher").val();
+var cypher = 'MATCH p=(n)-[*1]-() WHERE n.name contains "'+describe+'" return p limit 10';
+		if (cypher.length > 3) {
+			viz.renderWithCypher(cypher);
+		} else {
+			console.log("reload");
+			viz.reload();
+
+		}
+
+	});
+
+    };
+
+</script>
+</head>
+<body onload="draw()">
+<div id="viz"></div>
+
+<div class="search">
+输入描述: <input type="text" class="searchTerm" id="cypher" placeholder="请输入关键字的简单描述..." />
+<input type="submit" class="searchButton" value="搜索" id="reload">
+
+</div>
+</body>
+
+<script>
+
+
+</script>
+</html>
+
+</body>
+
+</html>

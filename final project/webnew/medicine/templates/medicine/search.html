@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <meta charset="UTF-8">
+
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+<style>
+    .sender{
+  clear:both;
+}
+.sender div:nth-of-type(1){
+  float: left;
+}
+.sender div:nth-of-type(2){
+  background-color: aquamarine;
+  float: left;
+  margin: 0 20px 10px 15px;
+  padding: 10px 10px 10px 0px;
+  border-radius:7px;
+}
+
+.receiver div:first-child img,
+.sender div:first-child img{
+  width:50px;
+  height: 50px;
+}
+
+.receiver{
+  clear:both;
+}
+.receiver div:nth-child(1){
+  float: right;
+}
+.receiver div:nth-of-type(2){
+  float:right;
+  background-color: gold;
+  margin: 0 10px 10px 20px;
+  padding: 10px 0px 10px 10px;
+  border-radius:7px;
+}
+
+.left_triangle{
+  height:0px;
+  width:0px;
+  border-width:8px;
+  border-style:solid;
+  border-color:transparent aquamarine transparent transparent;
+  position: relative;
+  left:-16px;
+  top:3px;
+}
+
+.right_triangle{
+  height:0px;
+  width:0px;
+  border-width:8px;
+  border-style:solid;
+  border-color:transparent transparent transparent gold;
+  position: relative;
+  right:-16px;
+  top:3px;
+}
+
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+  clear:both;
+  bottom: 0px;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #00B4CC;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+</style>
+<head>
+    <title>问答</title>
+</head>
+<body>
+<!-- Left -->
+{% for A,Q in ziped %}
+<div id="dialog">
+
+<div class="sender">
+  <div>
+    <img src="https://static.runoob.com/images/mix/img_avatar.png">
+  </div>
+  <div>
+    <div class="left_triangle"></div>
+       {% if Q %}
+    <span> {{Q}} </span>
+      {% else %}
+       <span> </span>
+      {% endif %}
+  </div>
+</div>
+    <div class="receiver">
+  <div>
+    <img src="https://static.runoob.com/images/mix/img_avatar.png">
+  </div>
+  <div>
+   <div class="right_triangle"></div>
+      {% if A %}
+    <span> {{A}} </span>
+      {% elif Q%}
+        {% if A %}
+       <span> {{A}}</span>
+         {% else %}
+        <span> 抱歉，没有结果</span>
+      {% endif %}
+      {% else %}
+      <span> 请输入问题</span>
+      {% endif %}
+  </div>
+</div>
+</div>
+{% endfor %}
+
+
+<div>
+<form class="search" action="/medicine/search" method="post" id="f">
+        <input type="text" name="searchtext" class="searchTerm" placeholder="请输入您要搜索的内容..." />
+        <button type="submit" class="searchButton" name="ybtn" value="搜索" id="yesbtn"  >
+ <i class="fa fa-search"></i>
+        </button>
+</form>
+</div>
+</body>
+
+
+</html>

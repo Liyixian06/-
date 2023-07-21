@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>按科室查找</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+
+<style>
+body {
+
+}
+.search {
+  width: 40%;
+  position: absolute;
+  clear:both;
+  top:10px;
+  left:80px;
+  font: 10pt arial;
+}
+
+.searchTerm {
+  width: 70%;
+  border: 3px solid #00B4CC;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  width: 40px;
+  height: 25px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 10px;
+}
+table{
+    width: 100%;
+    top:10px;
+    position: relative;
+    border-collapse: collapse;
+}
+
+table caption{
+    font-size: 2em;
+    font-weight: bold;
+    margin: 1em 0;
+}
+
+th,td{
+    border: 1px solid #999;
+    text-align: center;
+    padding: 20px 0;
+}
+
+table thead tr{
+    background-color: #008c8c;
+    color: #fff;
+}
+
+table tbody tr:nth-child(odd){
+    background-color: #eee;
+}
+
+table tbody tr:hover{
+    background-color: #ccc;
+}
+
+table tbody tr td:first-child{
+    color: #f40;
+}
+
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #FFFFE0;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 10px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #000000;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #228B22;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 100%) {
+  .sidenav {padding-top: 8px;}
+  .sidenav a {font-size: 15px;}
+}
+</style>
+</head>
+<body>
+<span style="font-size:15px;cursor:pointer;top:0px position:fixed" onclick="openNav()">&#9776; open</span>
+<div class="search">
+<form method="post" action="/medicine/departsearch">
+<input type="text" name="dd" class="searchTerm" placeholder="请在选择后输入对应的疾病名称的关键字..." />
+    <input type="submit" class="searchButton" name="ye" value="确定" />
+</form>
+</div>
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    {% for d in depart %}
+     <form id={{d}} method="post" action="/medicine/departsearch">
+         <input type="text" name="textd" value={{d}} readonly hidden="hidden">
+<a href="javascript:void(0)" onclick="document.getElementById('{{d}}').submit();" >{{d}}</a>
+          </form>
+{% endfor %}
+
+</div>
+<div id="list" class="list">
+    {% if sign %}
+    <table>
+        <thead>
+       <tr>
+                <td>疾病名</td>
+                <td>又名</td>
+                <td>检查</td>
+                <td>介绍</td>
+                <td>患病人群</td>
+                <td>治疗方法</td>
+            </tr>
+       </thead>
+            {% for n,a,i,in,p,t in info %}
+        <tbody>
+            <tr>
+
+                <td>{{n}}</td>
+                <td>{{a}}</td>
+                <td>{{i}}</td>
+                <td>{{in}}</td>
+                <td>{{p}}</td>
+                <td>{{t}}</td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "150px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+</script>
+</body>
+</head>
+
+
+
+</html>
